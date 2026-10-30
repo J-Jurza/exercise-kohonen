@@ -20,6 +20,10 @@ Sam's code works. It is slow, only handles three-feature (RGB) data, returns a b
 
 The maths is unchanged from Sam's version. The one algebraic edit is a dropped square root, since the distance was squared again on the next line.
 
+## Follow-up: logging and alerting
+
+The panel asked how the map would be tested behind a website, beyond print statements. [kohonen/kohonen_logging.ipynb](kohonen/kohonen_logging.ipynb) answers that in eight steps, starting from the finished `SOM` class: the `logging` module and its levels, logging inside the class, JSON logs for a log store, an alert handler that routes `ERROR` and above to a person with deduplication, a health check on quantisation error against a held-out reference, a FastAPI endpoint with request ids, latency and a 422 versus 500 split, tests that assert on the log records, and what each piece maps to in production. Steps 1 to 5 use the standard library only. Step 6 needs `fastapi` and `httpx`.
+
 ## Not implemented, described in the notebook
 
 - **Tests.** A pytest file for output shape, reproducibility, BMU correctness, input validation and falling error, run on every change.
@@ -29,8 +33,9 @@ The maths is unchanged from Sam's version. The one algebraic edit is a dropped s
 ## Run it
 
 ```bash
-pip install numpy matplotlib jupyter
+pip install numpy matplotlib jupyter fastapi httpx
 jupyter notebook kohonen/kohonen_modified.ipynb
+jupyter notebook kohonen/kohonen_logging.ipynb
 ```
 
 The timing cells run Sam's original 100x100 map, which takes about two and a half minutes.
@@ -44,3 +49,5 @@ The timing cells run Sam's original 100x100 map, which takes about two and a hal
 | `kohonen/kohonen.png` | Network diagram from the brief |
 | `kohonen/100.png`, `kohonen/1000.png` | Sam's two output maps |
 | `kohonen/som_map.png`, `kohonen/som_model.npz` | Output of the `SOM` class demo: the map image and the saved model |
+| `kohonen/kohonen_logging.ipynb` | The follow-up: logging, alerting, health check, FastAPI endpoint and tests |
+| `kohonen/som_model_logged.npz` | Model saved by the logging notebook, loaded by its endpoint |
